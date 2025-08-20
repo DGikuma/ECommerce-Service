@@ -1,12 +1,30 @@
+# settings.py
+
+import os
+import environ
 from pathlib import Path
-import os, sys
 from datetime import timedelta
 
+# -------------------------------------------------
+# Paths
+# -------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
-DEBUG = os.getenv("DEBUG", "1") == "1"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
+# -------------------------------------------------
+# Env configuration
+# -------------------------------------------------
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+DEBUG = env("DEBUG")
+SECRET_KEY = env("SECRET_KEY", default="insecure-secret-key")
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+
+# -------------------------------------------------
+# Applications
+# -------------------------------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -14,17 +32,22 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # third-party
+
+    # Third-party
     "rest_framework",
-    "rest_framework_simplejwt",
-    "mozilla_django_oidc",
-    "drf_spectacular",
-    # local
-    "api",
+    "rest_framework.authtoken",
+    "corsheaders",
+
+    # Local apps
+    "core",
+    "products",
+    "orders",
+    "users",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -33,89 +56,111 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "project.urls"
-TEMPLATES = [{
-    "BACKEND": "django.template.backends.django.DjangoTemplates",
-    "DIRS": [BASE_DIR / "templates"],
-    "APP_DIRS": True,
-    "OPTIONS": {"context_processors": [
-        "django.template.context_processors.debug",
-        "django.template.context_processors.request",
-        "django.contrib.auth.context_processors.auth",
-        "django.contrib.messages.context_processors.messages",
-    ]},
-}]
-WSGI_APPLICATION = "project.wsgi.application"
+ROOT_URLCONF = "ecommerce.urls"
 
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = "ecommerce.wsgi.application"
+
+# -------------------------------------------------
+# Database
+# -------------------------------------------------
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "mydatabase"),
-        "USER": os.getenv("POSTGRES_USER", "myuser"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "mypassword"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
-    }
+    "default": env.db(
+        "DATABASE_URL",
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+    )
 }
 
-AUTH_PASSWORD_VALIDATORS = []
+# -------------------------------------------------
+# Authentication & DRF
+# -------------------------------------------------
+AUTH_USER_MODEL = "users.User"
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+}
+
+# -------------------------------------------------
+# Password validation
+# -------------------------------------------------
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
+
+# -------------------------------------------------
+# I18N
+# -------------------------------------------------
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+# -------------------------------------------------
+# Static & Media
+# -------------------------------------------------
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# -------------------------------------------------
+# Email
+# -------------------------------------------------
+EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")
+EMAIL_HOST = env("EMAIL_HOST", default="smtp.gmail.com")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+
+# For signals and admin notifications
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or "noreply@example.com"
+ADMIN_NOTIFICATION_EMAIL = env("ADMIN_NOTIFICATION_EMAIL", default="admin@example.com")
+
+# -------------------------------------------------
+# CORS
+# -------------------------------------------------
+CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", default=True)
+
+# -------------------------------------------------
+# Celery
+# -------------------------------------------------
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://redis:6379/0")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
+
+# -------------------------------------------------
+# Default primary key
+# -------------------------------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-    ],
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
-    ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-}
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-}
-
-# OIDC (example placeholders; fill with your provider details)
-OIDC_RP_CLIENT_ID = os.getenv("OIDC_RP_CLIENT_ID", "client-id")
-OIDC_RP_CLIENT_SECRET = os.getenv("OIDC_RP_CLIENT_SECRET", "client-secret")
-OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv("OIDC_OP_AUTHORIZATION_ENDPOINT", "https://example.com/auth")
-OIDC_OP_TOKEN_ENDPOINT = os.getenv("OIDC_OP_TOKEN_ENDPOINT", "https://example.com/token")
-OIDC_OP_USER_ENDPOINT = os.getenv("OIDC_OP_USER_ENDPOINT", "https://example.com/userinfo")
-LOGIN_REDIRECT_URL = "/"
-
-# Africa's Talking / Email modes
-ENV = os.getenv("DJANGO_ENV", "dev")  # prod/dev/test
-AFRICASTALKING_ENABLED = True
-if ENV == "prod":
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = os.getenv("EMAIL_HOST")
-    EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-elif ENV == "dev":  # sandbox
-    AFRICASTALKING_ENABLED = False
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-elif ENV == "test" or "test" in sys.argv:
-    AFRICASTALKING_ENABLED = False
-    EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
-
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@example.com")
-AFRICASTALKING_USERNAME = os.getenv("AFRICASTALKING_USERNAME")
-AFRICASTALKING_API_KEY = os.getenv("AFRICASTALKING_API_KEY")
-AFRICASTALKING_SENDER_ID = os.getenv("AFRICASTALKING_SENDER_ID")
-
-SPECTACULAR_SETTINGS = {
-    "TITLE": "E-Commerce API",
-    "DESCRIPTION": "API for customers, categories, products, and orders with CSV import and JWT/OIDC.",
-    "VERSION": "1.0.0",
-}

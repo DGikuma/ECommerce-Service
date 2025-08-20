@@ -8,5 +8,8 @@ router.register(r"products", ProductViewSet, basename="product")
 router.register(r"orders", OrderViewSet, basename="order")
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("admin/", admin.site.urls),
+    path("oidc/", include("mozilla_django_oidc.urls")),   # <-- OIDC login/logout/callback
+    path("api/", include("core.urls")),                   # <-- our API
 ]
+
