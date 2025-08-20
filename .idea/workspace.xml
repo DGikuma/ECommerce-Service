@@ -1,27 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="16a8b107-cb3a-467c-85c2-ced3e6a95b7f" name="Changes" comment="" />
+    <list default="true" id="16a8b107-cb3a-467c-85c2-ced3e6a95b7f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Category.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Customer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Order&amp;OrderItem.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Product.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/csv_upload.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/parsers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/permissions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/serializers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/tests/test_api.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/utils_hierarchy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecommerce-stack.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/postgres-deployment.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ECommerce Service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ECommerce Service.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/.venv/.github/postgres-deployment.yaml" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/.venv/.github/postgres-service.yaml" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/.venv/.github/workflows/django.yml" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/.venv/services.yaml" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/deploy_django_minikube.bat" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/deployment.yaml" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="30xXxT7TowGVUEa0EloFE8FdSLa" />
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "dart.analysis.tool.window.visible": "false"
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\denni\PycharmProjects\ECommerce Service" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
